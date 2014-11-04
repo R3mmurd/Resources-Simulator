@@ -18,8 +18,8 @@ Discrete Events Simulator based on the simulator developed by Herbert Hoeger
 * Executing
 
   - The generated binary file is called "main". That receives 2 parameters:
-    1- file_name: Name of the file that with simulating parameters.
-    2- Initial seed for random number generator (optional).
+     - file_name: Name of the file that with simulating parameters.
+     - Initial seed for random number generator (optional).
 
   - For example: if you wanted to execute the program with a file called "input"
                  and a seed value 13, you should execute: ./main input 13
@@ -41,12 +41,12 @@ Discrete Events Simulator based on the simulator developed by Herbert Hoeger
     exist the quantity of lines defined in the second line.
 
   - Each line describing a node are the following variables (in order):
-    1- Label of node: a string without empty spaces.
-    2- Type of node: 0 for external and 1 for internal.
-    3- Average time between arrivals: Real number, only defined for external
-       nodes (0).
-    4- Average service time: Real number.
-    5- Node capacity: Integer number.
+      - Label of node: a string without empty spaces.
+      - Type of node: 0 for external and 1 for internal.
+      - Average time between arrivals: Real number, only defined for external
+        nodes (0).
+      - Average service time: Real number.
+      - Node capacity: Integer number.
 
   - Is considered that each node has an implicit number from 0 to n - 1 in the
     reading order.
@@ -59,11 +59,11 @@ Discrete Events Simulator based on the simulator developed by Herbert Hoeger
 
   - Each line defines a relationship "node -> target"" with the following
     variables (in order):
-    1- Number of node: Integer number. It refers to the number assigned
-       implicitly on the line in which it is located.
-    2- Number of target: Integer number. It refers to the number assigned
-       implicitly on the line in which it is located.
-    3- Probability: Real number that define probability for the node is reached.
+      - Number of node: Integer number. It refers to the number assigned
+        implicitly on the line in which it is located.
+      - Number of target: Integer number. It refers to the number assigned
+        implicitly on the line in which it is located.
+      - Probability: Real number that define probability for the node is reached.
 
 
 - Author: Alejandro J. Mujica
