@@ -41,7 +41,7 @@ class Event;
 # define NEW_EVENT(type) EVENT_FACTORY.new_event(type)
 
 // Macro para almacenar de un evento.
-# define STORE_EVENT(type) EVENT_FACTORY.store_event(type)
+# define STORE_EVENT(evt) EVENT_FACTORY.store_event(evt)
 
 /** Fábrica de eventos implementada como un singleton.
  *
