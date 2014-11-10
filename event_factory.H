@@ -25,7 +25,7 @@
 # ifndef EVENT_FACTORY_H
 # define EVENT_FACTORY_H
 
-# include <memory>
+# include <singleton.H>
 
 class Event;
 
@@ -54,11 +54,8 @@ class Event;
  *  mantenerlos allí para ser reutilizados o para ser liberados en la
  *  destrucción del objeto fábrica.
  */
-class Event_Factory
+class Event_Factory_Data
 {
-  /// Instancia única de la clase.
-  static std::unique_ptr<Event_Factory> uptr_instance;
-
   /// Almacen para eventos de llegada externa.
   Event external_arrival_events;
 
@@ -68,17 +65,9 @@ class Event_Factory
   /// Almacen para eventos de salida.
   Event walkout_events;
 
-  /// Constructor privado para construirse desde esta misma clase.
-  Event_Factory();
-
 public:
-  Event_Factory(const Event_Factory &) = delete;
-
   /// El destructor libera la memoria de los eventos almacenados.
-  ~Event_Factory();
-
-  /// Da una referencia a la instancia de la clase.
-  static Event_Factory & get_instance();
+  ~Event_Factory_Data();
 
   /** Construye o extrae del almacén un evento del tipo deseado.
    *
@@ -94,6 +83,8 @@ public:
    */
   void store_event(Event * ptr_event);
 };
+
+using Event_Factory = Singleton<Event_Factory_Data>;
 
 # endif // EVENT_FACTORY_H
 

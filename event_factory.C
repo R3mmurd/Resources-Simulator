@@ -27,30 +27,14 @@
 # include <event.H>
 # include <event_factory.H>
 
-std::unique_ptr<Event_Factory> Event_Factory::uptr_instance =
-  std::unique_ptr<Event_Factory>(nullptr);
-
-Event_Factory::Event_Factory()
-{
-  // Empty
-}
-
-Event_Factory::~Event_Factory()
+Event_Factory_Data::~Event_Factory_Data()
 {
   EMPTY_STORE(external_arrival_events)
   EMPTY_STORE(internal_arrival_events)
   EMPTY_STORE(walkout_events)
 }
 
-Event_Factory & Event_Factory::get_instance()
-{
-  if (uptr_instance.get() == nullptr)
-    uptr_instance = std::unique_ptr<Event_Factory>(new Event_Factory);
-
-  return *uptr_instance;
-}
-
-Event * Event_Factory::new_event(const Event::Type & type)
+Event * Event_Factory_Data::new_event(const Event::Type & type)
 {
   Event * ret_val = nullptr;
 
@@ -87,7 +71,7 @@ Event * Event_Factory::new_event(const Event::Type & type)
   return ret_val;
 }
 
-void Event_Factory::store_event(Event * ptr_event)
+void Event_Factory_Data::store_event(Event * ptr_event)
 {
   switch (ptr_event->get_type())
     {

@@ -1,6 +1,6 @@
 CXX = g++ -std=c++11
 
-INCLUDE = -I.
+INCLUDE = -I. -I../Common
 
 LIBS = -lgsl -lgslcblas
 
