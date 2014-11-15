@@ -29,14 +29,13 @@
 # include <simulator.H>
 
 Event::Event()
-  : time(-1.0), ptr_node(nullptr), ptr_next(nullptr)
+  : NCSlink(), time(-1.0), ptr_node(nullptr)
 {
   // Empty
 }
 
 Event::Event(Event::Ctor)
-  : time(std::numeric_limits<double>::max()), ptr_node(nullptr),
-    ptr_next(nullptr)
+  : NCSlink(), time(std::numeric_limits<double>::max()), ptr_node(nullptr)
 {
   // Empty
 }
@@ -66,26 +65,14 @@ void Event::set_ptr_node(Node * _ptr_node)
   ptr_node = _ptr_node;
 }
 
-void Event::insert_next(Event * ptr_event)
+Event * Event::front()
 {
-  ptr_event->ptr_next = ptr_next;
-  ptr_next = ptr_event;
+  return static_cast<Event *>(NCSlink::front());
 }
 
-Event * Event::get_next()
+Event * Event::pop()
 {
-  return ptr_next;
-}
-
-Event * Event::remove_next()
-{
-  Event * ret_val = ptr_next;
-
-  ptr_next = ret_val->ptr_next;
-
-  ret_val->ptr_next = nullptr;
-
-  return ret_val;
+  return static_cast<Event *>(NCSlink::pop());
 }
 
 void Event::perform(const double & current_time, Event_Queue *, gsl_rng *)

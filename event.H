@@ -25,17 +25,19 @@
 # ifndef EVENT_H
 # define EVENT_H
 
-# include <node.H>
-
 # include <gsl/gsl_rng.h>
 # include <gsl/gsl_randist.h>
 
+# include <slink.H>
+
+# include <node.H>
+
 class Event_Queue;
 
-/** Define un evento genérico para simular. Se implementa como un nodo de lista
- * simplemente enlazada no circular.
+/** Define un evento genérico para simular. Deriva de NCSlink para ser
+ *  representado como un nodo de lista simplemente enlazada no circular.
  */
-class Event
+class Event : public NCSlink
 {
 public:
   /** Tipo enumerado para usar un constructor que inicializa un evento especial
@@ -62,9 +64,6 @@ private:
   /// Puntero al nodo sobre el cual ocurrirá el evento.
   Node * ptr_node;
 
-  /// Puntero al siguiente evento enlazado.
-  Event * ptr_next;
-
 public:
   /// Construye un evento normal
   Event();
@@ -82,34 +81,12 @@ public:
 
   void set_ptr_node(Node *);
 
-  /** Enlaza un evento a éste, haciendo el que evento elnazado apunte al evento
-   *  al cual éste apuntaba antes.
-   *
-   *  @param ptr_event Puntero al evento que se va a enlazar.
-   */
-  void insert_next(Event * ptr_event);
+  Event * front();
 
-  /// Consulta el evento que está enlazado a éste.
-  Event * get_next();
+  Event * pop();
 
-  /** Desenlaza al siguiente evento de éste quedando apuntando al evento al cual
-   *  el evento extraido apuntaba.
-   *
-   *  @return El evento desenlazado.
-   */
-  Event * remove_next();
+  virtual void perform(const double &, Event_Queue *, gsl_rng *);
 
-  /** Operación que ejecuta el evento en la simulación. Ejecuta las operaciones
-   *  generales para cualquier tipo de evento en la simulación.
-   *
-   * @param current_time Tiempo actual de simulación.
-   * @param ptr_queue Puntero a la cola de eventos que contiene a éste.
-   * @param rng Generador de números aleatorios.
-   */
-  virtual void perform(const double & current_time, Event_Queue * ptr_queue,
-                       gsl_rng * rng);
-
-  /// Retorna el tipo de evento.
   virtual Type get_type() const;
 };
 
@@ -121,7 +98,7 @@ public:
    *  método perform de la clase padre y luego ejecuta las acciones generales
    *  de cualquier evento de llegada.
    */
-  virtual void perform(const double &, Event_Queue *, gsl_rng *) override;
+  virtual void perform(const double &, Event_Queue *, gsl_rng *);
 };
 
 /// Representa un evento de llegada externa.
@@ -132,7 +109,7 @@ public:
    *  método perform de la clase padre y luego ejecuta las acciones propias
    *  de un evento de llegada externa.
    */
-  void perform(const double &, Event_Queue *, gsl_rng *) override;
+  void perform(const double &, Event_Queue *, gsl_rng *);
 
   /// Retorna el tipo External_Arrival.
   Type get_type() const override;
@@ -147,7 +124,7 @@ public:
    *  método perform de la clase padre y luego ejecuta las acciones propias
    *  de un evento de llegada interna.
    */
-  virtual void perform(const double &, Event_Queue *, gsl_rng *) override;
+  virtual void perform(const double &, Event_Queue *, gsl_rng *);
 
   /// Retorna el tipo Internal_Arrival.
   Type get_type() const override;
@@ -161,7 +138,7 @@ public:
    *  método perform de la clase padre y luego ejecuta las acciones propias
    *  de un evento de llegada interna.
    */
-  virtual void perform(const double &, Event_Queue *, gsl_rng *) override;
+  virtual void perform(const double &, Event_Queue *, gsl_rng *);
 
   /// Retorna el tipo Walkout.
   Type get_type() const override;
