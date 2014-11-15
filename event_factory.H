@@ -31,8 +31,8 @@ class Event;
 
 // Macro para vaciar una pila de eventos.
 # define EMPTY_STORE(name)                                                     \
-  while (name.get_next() != nullptr)                                           \
-    delete name.remove_next();
+  while (name.front() != nullptr)                                           \
+    delete name.pop();
 
 // Macro para pedir la instancia de la clase.
 # define EVENT_FACTORY Event_Factory::get_instance()

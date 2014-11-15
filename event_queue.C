@@ -31,7 +31,7 @@ Event * Event_Queue::ptr_sentinel = &Event_Queue::sentinel;
 
 Event_Queue::Event_Queue()
 {
-  head.insert_next(ptr_sentinel);
+  head.push(ptr_sentinel);
 }
 
 Event_Queue::~Event_Queue()
@@ -43,30 +43,30 @@ void Event_Queue::push(Event * ptr_event)
 {
   Event * aux = &head;
 
-  while (aux->get_next()->get_time() < ptr_event->get_time())
-    aux = aux->get_next();
+  while (aux->front()->get_time() < ptr_event->get_time())
+    aux = aux->front();
 
-  aux->insert_next(ptr_event);
+  aux->push(ptr_event);
 }
 
 Event * Event_Queue::top()
 {
-  return head.get_next();
+  return head.front();
 }
 
 Event * Event_Queue::pop()
 {
-  return head.remove_next();
+  return head.pop();
 }
 
 bool Event_Queue::empty()
 {
-  return head.get_next() != ptr_sentinel;
+  return head.front() != ptr_sentinel;
 }
 
 void Event_Queue::clear()
 {
-  while (head.get_next() != ptr_sentinel)
-    STORE_EVENT(head.remove_next());
+  while (head.front() != ptr_sentinel)
+    STORE_EVENT(head.pop());
 }
 

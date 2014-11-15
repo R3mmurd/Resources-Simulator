@@ -41,26 +41,26 @@ Event * Event_Factory_Data::new_event(const Event::Type & type)
   switch (type)
     {
     case Event::External_Arrival:
-      if (external_arrival_events.get_next() == nullptr)
+      if (external_arrival_events.front() == nullptr)
         ret_val = new External_Arrival_Event;
       else
-        ret_val = external_arrival_events.remove_next();
+        ret_val = external_arrival_events.pop();
 
       break;
 
     case Event::Internal_Arrival:
-      if (internal_arrival_events.get_next() == nullptr)
+      if (internal_arrival_events.front() == nullptr)
         ret_val = new Internal_Arrival_Event;
       else
-        ret_val = internal_arrival_events.remove_next();
+        ret_val = internal_arrival_events.pop();
 
       break;
 
     case Event::Walkout:
-      if (walkout_events.get_next() == nullptr)
+      if (walkout_events.front() == nullptr)
         ret_val = new Walkout_Event;
       else
-        ret_val = walkout_events.remove_next();
+        ret_val = walkout_events.pop();
 
       break;
 
@@ -76,13 +76,13 @@ void Event_Factory_Data::store_event(Event * ptr_event)
   switch (ptr_event->get_type())
     {
     case Event::External_Arrival:
-      external_arrival_events.insert_next(ptr_event);
+      external_arrival_events.push(ptr_event);
       break;
     case Event::Internal_Arrival:
-      internal_arrival_events.insert_next(ptr_event);
+      internal_arrival_events.push(ptr_event);
       break;
     case Event::Walkout:
-      walkout_events.insert_next(ptr_event);
+      walkout_events.push(ptr_event);
       break;
     }
 }
