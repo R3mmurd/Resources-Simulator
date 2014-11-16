@@ -31,7 +31,7 @@ class Event;
 
 // Macro para vaciar una pila de eventos.
 # define EMPTY_STORE(name)                                                     \
-  while (name.front() != nullptr)                                           \
+  while (name.front() != nullptr)                                              \
     delete name.pop();
 
 // Macro para pedir la instancia de la clase.

@@ -25,7 +25,7 @@
 # include <event_queue.H>
 # include <event_factory.H>
 
-Event Event_Queue::sentinel = Event(Event::SentinelCtor);
+Event Event_Queue::sentinel = Event(Event::Sentinel_Ctor);
 
 Event * Event_Queue::ptr_sentinel = &Event_Queue::sentinel;
 

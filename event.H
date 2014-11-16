@@ -45,7 +45,7 @@ public:
    */ 
   enum Ctor
   {
-    SentinelCtor
+    Sentinel_Ctor
   };
 
   /// Definición de tipos de evento.
