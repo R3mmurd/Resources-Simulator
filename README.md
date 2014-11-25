@@ -7,7 +7,6 @@ Discrete Events Simulator based on the simulator developed by Herbert Hoeger
 
   - Operating System: GNU/Linux.
   - Compiler: gcc 4.7 or greater, you might use clang.
-  - GNU Scientific Library (GSL) http://www.gnu.org/software/gsl/
 
 * Compiling
 

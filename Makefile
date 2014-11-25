@@ -2,8 +2,6 @@ CXX = g++ -std=c++11
 
 INCLUDE = -I. -I../Common
 
-LIBS = -lgsl -lgslcblas
-
 HEADERS = event.H event_queue.H event_factory.H node.H simulator.H
 
 SOURCES = event.C event_queue.C event_factory.C node.C simulator.C
@@ -17,14 +15,14 @@ FAST = -Ofast
 DEBUG_MODE = -O0 -g
 
 default: obj
-	$(CXX) $(FAST) $(INCLUDE) $(MAIN).C -o $(MAIN) $(OBJECTS) $(LIBS)
+	$(CXX) $(FAST) $(INCLUDE) $(MAIN).C -o $(MAIN) $(OBJECTS)
 
 obj:
 	$(CXX) $(FAST) -c $(INCLUDE) $(SOURCES)
 
 
 debug: obj_debug
-	$(CXX) $(DEBUG_MODE) $(INCLUDE) $(MAIN).C -o $(MAIN) $(OBJECTS) $(LIBS)
+	$(CXX) $(DEBUG_MODE) $(INCLUDE) $(MAIN).C -o $(MAIN) $(OBJECTS)
 
 obj_debug:
 	$(CXX) $(DEBUG_MODE) -c $(INCLUDE) $(SOURCES)

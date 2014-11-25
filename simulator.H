@@ -31,8 +31,6 @@
 # include <event_queue.H>
 # include <node.H>
 
-# define EXPO(mu) gsl_ran_exponential(rng, mu)
-
 /// Representa un simulador.
 class Simulator
 {
@@ -46,7 +44,7 @@ class Simulator
   size_t seed;
 
   /// Generador de números aleatorios.
-  gsl_rng * rng;
+  std::mt19937 rng;
 
   /// Tiempo actual de simulación.
   double current_time;
@@ -76,8 +74,6 @@ class Simulator
 
 public:
   Simulator(const size_t &);
-
-  ~Simulator();
 
   /** Inicializa el simulador.
    *

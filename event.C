@@ -75,7 +75,7 @@ Event * Event::pop()
   return static_cast<Event *>(NCSlink::pop());
 }
 
-void Event::perform(const double & current_time, Event_Queue *, gsl_rng *)
+void Event::perform(const double & current_time, Event_Queue *, rng_t &)
 {
   Node * ptr_node = get_ptr_node();
 
@@ -94,7 +94,7 @@ Event::Type Event::get_type() const
 }
 
 void Arrival_Event::perform(const double & current_time,
-                            Event_Queue * ptr_queue, gsl_rng * rng)
+                            Event_Queue * ptr_queue, rng_t & rng)
 {
   // Llama al evento perform de la clase Event.
   Event::perform(current_time, ptr_queue, rng);
@@ -120,8 +120,12 @@ void Arrival_Event::perform(const double & current_time,
         Event * ptr_walkout_event = NEW_EVENT(Event::Walkout);
 
         ptr_walkout_event->set_ptr_node(ptr_node);
+
+        expo_dist_t expo;
+
         ptr_walkout_event->set_time(
-          current_time + EXPO(ptr_node->get_service_time())
+          current_time +
+          expo(rng, expo_dist_t::param_type(ptr_node->get_service_time()))
         );
         ptr_queue->push(ptr_walkout_event);
         ptr_node->inc_use();
@@ -131,7 +135,7 @@ void Arrival_Event::perform(const double & current_time,
 }
 
 void External_Arrival_Event::perform(const double & current_time,
-                                     Event_Queue * ptr_queue, gsl_rng * rng)
+                                     Event_Queue * ptr_queue, rng_t & rng)
 {
   // Llama al evento perform de la clase Arrival_Event.
   Arrival_Event::perform(current_time, ptr_queue, rng);
@@ -141,7 +145,13 @@ void External_Arrival_Event::perform(const double & current_time,
   /* Como fue una llegada externa se genera la próxima llegada externa sobre
      este mismo evento para reutilizar el espacio de memoria.
   */
-  set_time(current_time + EXPO(ptr_node->get_time_between_arrivals()));
+   expo_dist_t expo;
+
+   set_time(
+     current_time +
+     expo(rng, expo_dist_t::param_type(ptr_node->get_time_between_arrivals()))
+   );
+
   ptr_queue->push(this);
 
 }
@@ -152,7 +162,7 @@ Event::Type External_Arrival_Event::get_type() const
 }
 
 void Internal_Arrival_Event::perform(const double & current_time,
-                                     Event_Queue * ptr_queue, gsl_rng * rng)
+                                     Event_Queue * ptr_queue, rng_t & rng)
 {
   // Llama al evento perform de la clase Arrival_Event.
   Arrival_Event::perform(current_time, ptr_queue, rng);
@@ -169,7 +179,7 @@ Event::Type Internal_Arrival_Event::get_type() const
 }
 
 void Walkout_Event::perform(const double & current_time,
-                            Event_Queue * ptr_queue, gsl_rng * rng)
+                            Event_Queue * ptr_queue, rng_t & rng)
 {
   // Llama al evento perform de la clase Event.
   Event::perform(current_time, ptr_queue, rng);
@@ -179,7 +189,8 @@ void Walkout_Event::perform(const double & current_time,
   Node::Statistics & statistics = ptr_node->statistics();
 
   // Selecciono nodo sucesor aleatorio.
-  double p = gsl_rng_uniform(rng);
+  std::uniform_real_distribution<double> unif(0.0, 1.0);
+  double p = unif(rng);
 
   Node * ptr_tgt_node = ptr_node->get_target(p);
 
@@ -201,7 +212,13 @@ void Walkout_Event::perform(const double & current_time,
          memoria.
       */
       ptr_node->dec_queue();
-      set_time(current_time + EXPO(ptr_node->get_service_time()));
+
+      expo_dist_t expo;
+
+      set_time(
+        current_time +
+        expo(rng, expo_dist_t::param_type(ptr_node->get_service_time()))
+      );
       ptr_queue->push(this);
     }
   else // Si no había nadie en cola decremento uso y almaceno la memoria.

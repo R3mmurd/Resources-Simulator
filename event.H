@@ -25,12 +25,15 @@
 # ifndef EVENT_H
 # define EVENT_H
 
-# include <gsl/gsl_rng.h>
-# include <gsl/gsl_randist.h>
+# include <random>
 
 # include <slink.H>
 
 # include <node.H>
+
+using rng_t = std::mt19937;
+
+using expo_dist_t = std::exponential_distribution<double>;
 
 class Event_Queue;
 
@@ -85,7 +88,7 @@ public:
 
   Event * pop();
 
-  virtual void perform(const double &, Event_Queue *, gsl_rng *);
+  virtual void perform(const double &, Event_Queue *, rng_t &);
 
   virtual Type get_type() const;
 };
@@ -98,7 +101,7 @@ public:
    *  método perform de la clase padre y luego ejecuta las acciones generales
    *  de cualquier evento de llegada.
    */
-  virtual void perform(const double &, Event_Queue *, gsl_rng *);
+  virtual void perform(const double &, Event_Queue *, rng_t &);
 };
 
 /// Representa un evento de llegada externa.
@@ -109,7 +112,7 @@ public:
    *  método perform de la clase padre y luego ejecuta las acciones propias
    *  de un evento de llegada externa.
    */
-  void perform(const double &, Event_Queue *, gsl_rng *);
+  void perform(const double &, Event_Queue *, rng_t &);
 
   /// Retorna el tipo External_Arrival.
   Type get_type() const override;
@@ -124,7 +127,7 @@ public:
    *  método perform de la clase padre y luego ejecuta las acciones propias
    *  de un evento de llegada interna.
    */
-  virtual void perform(const double &, Event_Queue *, gsl_rng *);
+  virtual void perform(const double &, Event_Queue *, rng_t &);
 
   /// Retorna el tipo Internal_Arrival.
   Type get_type() const override;
@@ -138,7 +141,7 @@ public:
    *  método perform de la clase padre y luego ejecuta las acciones propias
    *  de un evento de llegada interna.
    */
-  virtual void perform(const double &, Event_Queue *, gsl_rng *);
+  virtual void perform(const double &, Event_Queue *, rng_t &);
 
   /// Retorna el tipo Walkout.
   Type get_type() const override;

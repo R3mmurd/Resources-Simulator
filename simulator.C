@@ -144,7 +144,12 @@ void Simulator::init_queue()
 
       Event * ptr_event = NEW_EVENT(Event::External_Arrival);
       ptr_event->set_ptr_node(&node);
-      ptr_event->set_time(EXPO(node.get_time_between_arrivals()));
+
+      expo_dist_t expo;
+
+      ptr_event->set_time(
+        expo(rng, expo_dist_t::param_type(node.get_time_between_arrivals()))
+      );
       event_queue.push(ptr_event);
     }
 }
@@ -158,15 +163,9 @@ Event * Simulator::get_next_event()
 }
 
 Simulator::Simulator(const size_t & _seed)
-  : seed(_seed), rng(gsl_rng_alloc(gsl_rng_mt19937)), current_time(0.0),
-    final_time(0.0)
+  : seed(_seed), rng(seed), current_time(0.0), final_time(0.0)
 {
-  gsl_rng_set(rng, seed);
-}
-
-Simulator::~Simulator()
-{
-  gsl_rng_free(rng);
+  // Empty
 }
 
 void Simulator::init(const std::string & file_name)
