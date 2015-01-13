@@ -22,6 +22,7 @@
   aledrums@gmail.com
 */
 
+# include <iostream>
 # include <fstream>
 # include <sstream>
 # include <stdexcept>
@@ -75,12 +76,22 @@ void Simulator::read_graph(const std::string & file_name)
       // Luego para cualquiera de los tipos leo el tiempo promedio de servicio.
       file >> t2 >> cap;
 
+      /* Los tiempos entre llegadas y los tiempos de servicio se generan con
+         mediante la distribución exponencial. El parámetro t es el tiempo
+         medio. std::exponential_distribution requiere es la variable lambda,
+         por lo tanto debemos efectuar la operación lambda = 1 / t a cada tiempo
+         medio.
+      */
+
+      double lambda_t1 = t1 == 0.0 ? 0.0 : 1 / t1;
+      double lambda_t2 = 1 / t2;
+
       Node node;
 
       node.set_label(label);
       node.set_type(Node::Type(type));
-      node.set_time_between_arrivals(t1);
-      node.set_service_time(t2);
+      node.set_time_between_arrivals(lambda_t1);
+      node.set_service_time(lambda_t2);
       node.set_capacity(cap);
 
       // Inserto el nodo en el grafo (al final de la lista).
@@ -150,6 +161,7 @@ void Simulator::init_queue()
       ptr_event->set_time(
         expo(rng, expo_dist_t::param_type(node.get_time_between_arrivals()))
       );
+
       event_queue.push(ptr_event);
     }
 }
