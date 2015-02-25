@@ -222,7 +222,7 @@ std::string Simulator::generate_statistics()
 
   sstr << "Semilla para números aleatorios: " << seed << "\n";
   sstr << "Tiempo de simulación: " << final_time << "\n\n";
- 
+
   for (Node & node : graph)
     {
       sstr << "Nodo: " << node.get_label() << "\n";
@@ -274,10 +274,11 @@ void Simulator::write_dot_from_graph(const std::string & file_name)
       file << "  " << i << "["
            << "label = \"" << node.get_label() << "\\n"
            << "Type: " 
-           << (node.get_type() == Node::Internal ? "Internal" : "External")
-           << "\\nTime between arrivals: "
-           << 1 / node.get_time_between_arrivals()
-           << "\\nService time: " << 1 / node.get_service_time() << "\\n"
+           << (node.get_type() == Node::Internal ? "Internal" : "External");
+      if (node.get_type() == Node::External)
+        file << "\\nTime between arrivals: "
+             << 1 / node.get_time_between_arrivals();
+      file << "\\nService time: " << 1 / node.get_service_time() << "\\n"
            << "Capacity: " << node.get_capacity() << "\\n\\n"
            << "Use: " << node.get_use() << "\\nQueue: " << node.get_queue()
            << "\"];\n";
