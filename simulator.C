@@ -275,8 +275,9 @@ void Simulator::write_dot_from_graph(const std::string & file_name)
            << "label = \"" << node.get_label() << "\\n"
            << "Type: " 
            << (node.get_type() == Node::Internal ? "Internal" : "External")
-           << "\\nTime between arrivals: " << node.get_time_between_arrivals()
-           << "\\nService time: " << node.get_service_time() << "\\n"
+           << "\\nTime between arrivals: "
+           << 1 / node.get_time_between_arrivals()
+           << "\\nService time: " << 1 / node.get_service_time() << "\\n"
            << "Capacity: " << node.get_capacity() << "\\n\\n"
            << "Use: " << node.get_use() << "\\nQueue: " << node.get_queue()
            << "\"];\n";
