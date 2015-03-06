@@ -121,12 +121,9 @@ void Arrival_Event::perform(const double & current_time,
 
         ptr_walkout_event->set_ptr_node(ptr_node);
 
-        expo_dist_t expo;
+        expo_dist_t expo(1.0 / ptr_node->get_service_time());
 
-        ptr_walkout_event->set_time(
-          current_time +
-          expo(rng, expo_dist_t::param_type(ptr_node->get_service_time()))
-        );
+        ptr_walkout_event->set_time(current_time + expo(rng));
         ptr_queue->push(ptr_walkout_event);
         ptr_node->inc_use();
     }
@@ -145,12 +142,9 @@ void External_Arrival_Event::perform(const double & current_time,
   /* Como fue una llegada externa se genera la próxima llegada externa sobre
      este mismo evento para reutilizar el espacio de memoria.
   */
-   expo_dist_t expo;
+   expo_dist_t expo(1.0 / ptr_node->get_time_between_arrivals());
 
-   set_time(
-     current_time +
-     expo(rng, expo_dist_t::param_type(ptr_node->get_time_between_arrivals()))
-   );
+   set_time(current_time + expo(rng));
 
   ptr_queue->push(this);
 
@@ -213,12 +207,9 @@ void Walkout_Event::perform(const double & current_time,
       */
       ptr_node->dec_queue();
 
-      expo_dist_t expo;
+      expo_dist_t expo(1.0 / ptr_node->get_service_time());
 
-      set_time(
-        current_time +
-        expo(rng, expo_dist_t::param_type(ptr_node->get_service_time()))
-      );
+      set_time(current_time + expo(rng));
       ptr_queue->push(this);
     }
   else // Si no había nadie en cola decremento uso y almaceno la memoria.
