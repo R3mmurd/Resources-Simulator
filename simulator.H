@@ -44,7 +44,7 @@ class Simulator
   size_t seed;
 
   /// Generador de números aleatorios.
-  std::mt19937 rng;
+  rng_t rng;
 
   /// Tiempo actual de simulación.
   double current_time;

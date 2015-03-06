@@ -25,6 +25,7 @@
 # include <cstdlib>
 
 # include <iostream>
+# include <chrono>
 
 # include <simulator.H>
 
@@ -39,7 +40,9 @@ int main (int argc, char * argv[])
   std::string file_name = argv[1];
 
   // Si no se pasa una semilla como parámetro, se "aleatoriza".
-  size_t seed = argc < 3 ? time(nullptr) : std::atoi(argv[2]);
+  size_t seed = argc < 3
+    ? std::chrono::system_clock::now().time_since_epoch().count() % rng_t::max()
+    : std::atoi(argv[2]);
 
   // Construyo el simulador con semilla seed.
   Simulator simulator(seed);

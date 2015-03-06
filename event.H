@@ -31,7 +31,7 @@
 
 # include <node.H>
 
-using rng_t = std::mt19937;
+using rng_t = std::mt19937_64;
 
 using expo_dist_t = std::exponential_distribution<double>;
 
