@@ -56,13 +56,13 @@ Discrete Events Simulator based on the simulator developed by Herbert Hoeger
   - The last m lines contain information about each target node. We assume that
     it'll exist the quantity of lines defined in the previous line.
 
-  - Each line defines a relationship "node -> target"" with the following
+  - Each line defines a relationship "node -> target" with the following
     variables (in order):
       - Number of node: Integer number. It refers to the number assigned
         implicitly on the line in which it is located.
       - Number of target: Integer number. It refers to the number assigned
         implicitly on the line in which it is located.
-      - Probability: Real number that define probability for the node is reached.
+      - Probability: Real number that define the probability of reaching target.
 
 
 - Author: Alejandro J. Mujica
