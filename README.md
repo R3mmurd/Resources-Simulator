@@ -65,6 +65,5 @@ Discrete Events Simulator based on the simulator developed by Herbert Hoeger
       - Probability: Real number that define the probability of reaching target.
 
 
-- Author: Alejandro J. Mujica
-- email: aledrums@gmail.com
+Author: Alejandro J. Mujica (aledrums@gmail.com).
 
