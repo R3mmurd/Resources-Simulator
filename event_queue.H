@@ -36,8 +36,8 @@
 class Event_Queue
 {
   /** Evento especial que tiene tiempo tendiendo a infinito para marcar el final
-   *  de la cola y solamente validar tiempo y no tener que lidiar con un puntero
-   *  nulo al final de la cola.
+   *  de la cola y solamente validar tiempo y no tener que hacer validaciones de
+   *  puntero nulo al final de la cola.
    */
   static Event sentinel;
 
@@ -55,7 +55,7 @@ public:
 
   ~Event_Queue();
 
-  /** Inserta un evento en la cola ordenados por tiempo.
+  /** Inserta ordenadamente (por tiempo) un evento en la cola.
    *
    *  @param ptr_event Puntero al evento que se insertará,
    */
@@ -75,6 +75,9 @@ public:
 
   /// Deja la cola vacía.
   void clear();
+
+  /// Operador de asignación deshabilitado.
+  Event_Queue & operator = (const Event_Queue &) = delete;
 };
 
 # endif // EVENT_QUEUE_H
