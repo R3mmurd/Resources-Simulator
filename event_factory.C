@@ -40,7 +40,7 @@ Event * Event_Factory_Data::new_event(const Event::Type & type)
 
   switch (type)
     {
-    case Event::External_Arrival:
+    case Event::Type::External_Arrival:
       if (external_arrival_events.front() == nullptr)
         ret_val = new External_Arrival_Event;
       else
@@ -48,7 +48,7 @@ Event * Event_Factory_Data::new_event(const Event::Type & type)
 
       break;
 
-    case Event::Internal_Arrival:
+    case Event::Type::Internal_Arrival:
       if (internal_arrival_events.front() == nullptr)
         ret_val = new Internal_Arrival_Event;
       else
@@ -56,7 +56,7 @@ Event * Event_Factory_Data::new_event(const Event::Type & type)
 
       break;
 
-    case Event::Walkout:
+    case Event::Type::Walkout:
       if (walkout_events.front() == nullptr)
         ret_val = new Walkout_Event;
       else
@@ -64,8 +64,7 @@ Event * Event_Factory_Data::new_event(const Event::Type & type)
 
       break;
 
-    default:
-      throw std::domain_error("Error in event type");
+    default: throw std::domain_error("Error in event type");
     }
 
   return ret_val;
@@ -75,15 +74,16 @@ void Event_Factory_Data::store_event(Event * ptr_event)
 {
   switch (ptr_event->get_type())
     {
-    case Event::External_Arrival:
+    case Event::Type::External_Arrival:
       external_arrival_events.push(ptr_event);
       break;
-    case Event::Internal_Arrival:
+    case Event::Type::Internal_Arrival:
       internal_arrival_events.push(ptr_event);
       break;
-    case Event::Walkout:
+    case Event::Type::Walkout:
       walkout_events.push(ptr_event);
       break;
+    default: throw std::domain_error("Error in event type");
     }
 }
 

@@ -143,7 +143,7 @@ void Simulator::init_queue()
       if (node.get_type() != Node::External)
         continue;
 
-      Event * ptr_event = NEW_EVENT(Event::External_Arrival);
+      Event * ptr_event = NEW_EVENT(Event::Type::External_Arrival);
       ptr_event->set_ptr_node(&node);
 
       expo_dist_t expo(1.0 / node.get_time_between_arrivals());

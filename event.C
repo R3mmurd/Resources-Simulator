@@ -29,13 +29,13 @@
 # include <simulator.H>
 
 Event::Event()
-  : NCSlink(), time(-1.0), ptr_node(nullptr)
+  : time(-1.0), ptr_node(nullptr), next(nullptr)
 {
   // Empty
 }
 
 Event::Event(Event::Ctor)
-  : NCSlink(), time(std::numeric_limits<double>::max()), ptr_node(nullptr)
+  : time(std::numeric_limits<double>::max()), ptr_node(nullptr), next(nullptr)
 {
   // Empty
 }
@@ -65,14 +65,27 @@ void Event::set_ptr_node(Node * _ptr_node)
   ptr_node = _ptr_node;
 }
 
-Event * Event::front()
+void Event::push(Event * evt)
 {
-  return static_cast<Event *>(NCSlink::front());
+  evt->next = next;
+  next = evt;
+}
+
+Event *& Event::front()
+{
+  return next;
 }
 
 Event * Event::pop()
 {
-  return static_cast<Event *>(NCSlink::pop());
+  Event * ret = next;
+
+  if (ret == nullptr)
+    throw std::overflow_error("There is not next event");
+  
+  next = ret->next;
+  ret->next = nullptr;
+  return ret;
 }
 
 void Event::perform(const double & current_time, Event_Queue *, rng_t &)
@@ -90,7 +103,7 @@ void Event::perform(const double & current_time, Event_Queue *, rng_t &)
 
 Event::Type Event::get_type() const
 {
-  return Event::Num_Types;
+  return Event::Type::Num_Types;
 }
 
 void Arrival_Event::perform(const double & current_time,
@@ -115,19 +128,19 @@ void Arrival_Event::perform(const double & current_time,
     {
       if (ptr_node->get_use() == 0) // El nodo esta sin atender a nadie.
         statistics.empty_time += current_time - statistics.prev_event_time;
-
-        // Pasa a ser atendido de inmediato, genero su salida.
-        Event * ptr_walkout_event = NEW_EVENT(Event::Walkout);
-
-        ptr_walkout_event->set_ptr_node(ptr_node);
-
-        expo_dist_t expo(1.0 / ptr_node->get_service_time());
-
-        ptr_walkout_event->set_time(current_time + expo(rng));
-        ptr_queue->push(ptr_walkout_event);
-        ptr_node->inc_use();
+      
+      // Pasa a ser atendido de inmediato, genero su salida.
+      Event * ptr_walkout_event = NEW_EVENT(Event::Type::Walkout);
+      
+      ptr_walkout_event->set_ptr_node(ptr_node);
+      
+      expo_dist_t expo(1.0 / ptr_node->get_service_time());
+      
+      ptr_walkout_event->set_time(current_time + expo(rng));
+      ptr_queue->push(ptr_walkout_event);
+      ptr_node->inc_use();
     }
-
+  
   statistics.prev_event_time = current_time;
 }
 
@@ -152,7 +165,7 @@ void External_Arrival_Event::perform(const double & current_time,
 
 Event::Type External_Arrival_Event::get_type() const
 {
-  return Event::External_Arrival;
+  return Event::Type::External_Arrival;
 }
 
 void Internal_Arrival_Event::perform(const double & current_time,
@@ -169,7 +182,7 @@ void Internal_Arrival_Event::perform(const double & current_time,
 
 Event::Type Internal_Arrival_Event::get_type() const
 {
-  return Event::Internal_Arrival;
+  return Event::Type::Internal_Arrival;
 }
 
 void Walkout_Event::perform(const double & current_time,
@@ -191,10 +204,11 @@ void Walkout_Event::perform(const double & current_time,
   if (ptr_tgt_node != nullptr) // Si hubo un sucesor
     {
       // Creo el evento de llegada interna
-      Event * ptr_internal_arrival_event = NEW_EVENT(Event::Internal_Arrival);
+      Event * ptr_internal_arrival_event =
+	NEW_EVENT(Event::Type::Internal_Arrival);
       ptr_internal_arrival_event->set_time(current_time);
       ptr_internal_arrival_event->set_ptr_node(ptr_tgt_node);
-
+      
       ptr_queue->push(ptr_internal_arrival_event);
     }
 
@@ -223,6 +237,6 @@ void Walkout_Event::perform(const double & current_time,
 
 Event::Type Walkout_Event::get_type() const
 {
-  return Event::Walkout;
+  return Event::Type::Walkout;
 }
 

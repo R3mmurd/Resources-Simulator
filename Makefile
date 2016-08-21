@@ -1,4 +1,4 @@
-CXX = g++ -std=c++11
+CXX = clang++ -std=c++14
 
 INCLUDE = -I. -I../Common
 
@@ -28,4 +28,4 @@ obj_debug:
 	$(CXX) $(DEBUG_MODE) -c $(INCLUDE) $(SOURCES)
 
 clean:
-	$(RM) *.o *~
+	$(RM) *.o *~ $(MAIN)

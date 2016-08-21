@@ -27,8 +27,6 @@
 
 # include <random>
 
-# include <slink.H>
-
 # include <node.H>
 
 using rng_t = std::mt19937_64;
@@ -40,32 +38,25 @@ class Event_Queue;
 /** Define un evento genérico para simular. Deriva de NCSlink para ser
  *  representado como un nodo de lista simplemente enlazada no circular.
  */
-class Event : public NCSlink
+class Event
 {
 public:
   /** Tipo enumerado para usar un constructor que inicializa un evento especial
    *  con tiempo tendiendo a infinito.
    */ 
-  enum Ctor
-  {
-    Sentinel_Ctor
-  };
-
+  enum class Ctor { Sentinel_Ctor };
+  
   /// Definición de tipos de evento.
-  enum Type
-  {
-    Internal_Arrival, // Llegada externa
-    External_Arrival, // Llegada interna
-    Walkout,          // Salida
-    Num_Types
-  };
-
+  enum class Type { Internal_Arrival, External_Arrival, Walkout, Num_Types };
+  
 private:
   /// Tiempo en el cual ocurrirá el evento.
   double time;
 
   /// Puntero al nodo sobre el cual ocurrirá el evento.
   Node * ptr_node;
+
+  Event * next;
 
 public:
   /// Construye un evento normal
@@ -84,7 +75,9 @@ public:
 
   void set_ptr_node(Node *);
 
-  Event * front();
+  void push(Event *);
+
+  Event *& front();
 
   Event * pop();
 
@@ -112,7 +105,7 @@ public:
    *  método perform de la clase padre y luego ejecuta las acciones propias
    *  de un evento de llegada externa.
    */
-  void perform(const double &, Event_Queue *, rng_t &);
+  void perform(const double &, Event_Queue *, rng_t &) override;
 
   /// Retorna el tipo External_Arrival.
   Type get_type() const override;
@@ -127,7 +120,7 @@ public:
    *  método perform de la clase padre y luego ejecuta las acciones propias
    *  de un evento de llegada interna.
    */
-  virtual void perform(const double &, Event_Queue *, rng_t &);
+  virtual void perform(const double &, Event_Queue *, rng_t &) override;
 
   /// Retorna el tipo Internal_Arrival.
   Type get_type() const override;
@@ -141,7 +134,7 @@ public:
    *  método perform de la clase padre y luego ejecuta las acciones propias
    *  de un evento de llegada interna.
    */
-  virtual void perform(const double &, Event_Queue *, rng_t &);
+  virtual void perform(const double &, Event_Queue *, rng_t &) override;
 
   /// Retorna el tipo Walkout.
   Type get_type() const override;
