@@ -59,10 +59,10 @@ public:
    *
    *  @param ptr_event Puntero al evento que se insertará,
    */
-  void push(Event * ptr_event);
+  void insert(Event * ptr_event);
 
   /// Consulta el primer elemento en cola.
-  Event * top();
+  Event * first();
 
   /** Elimina el primer elemento en cola.
    *

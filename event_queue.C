@@ -39,7 +39,7 @@ Event_Queue::~Event_Queue()
   clear();
 }
 
-void Event_Queue::push(Event * ptr_event)
+void Event_Queue::insert(Event * ptr_event)
 {
   Event * aux = &head;
 
@@ -49,7 +49,7 @@ void Event_Queue::push(Event * ptr_event)
   aux->push(ptr_event);
 }
 
-Event * Event_Queue::top()
+Event * Event_Queue::first()
 {
   return head.front();
 }

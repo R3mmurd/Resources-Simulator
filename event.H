@@ -35,8 +35,8 @@ using expo_dist_t = std::exponential_distribution<double>;
 
 class Event_Queue;
 
-/** Define un evento genérico para simular. Deriva de NCSlink para ser
- *  representado como un nodo de lista simplemente enlazada no circular.
+/** Define un evento genérico para simular. Está implementado como un nodo de
+ *  lista simplemente enlazada no circular.
  */
 class Event
 {

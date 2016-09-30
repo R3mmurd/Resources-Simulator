@@ -150,7 +150,7 @@ void Simulator::init_queue()
 
       ptr_event->set_time(expo(rng));
 
-      event_queue.push(ptr_event);
+      event_queue.insert(ptr_event);
     }
 }
 

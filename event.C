@@ -137,7 +137,7 @@ void Arrival_Event::perform(const double & current_time,
       expo_dist_t expo(1.0 / ptr_node->get_service_time());
       
       ptr_walkout_event->set_time(current_time + expo(rng));
-      ptr_queue->push(ptr_walkout_event);
+      ptr_queue->insert(ptr_walkout_event);
       ptr_node->inc_use();
     }
   
@@ -159,7 +159,7 @@ void External_Arrival_Event::perform(const double & current_time,
 
    set_time(current_time + expo(rng));
 
-  ptr_queue->push(this);
+  ptr_queue->insert(this);
 
 }
 
@@ -209,7 +209,7 @@ void Walkout_Event::perform(const double & current_time,
       ptr_internal_arrival_event->set_time(current_time);
       ptr_internal_arrival_event->set_ptr_node(ptr_tgt_node);
       
-      ptr_queue->push(ptr_internal_arrival_event);
+      ptr_queue->insert(ptr_internal_arrival_event);
     }
 
   statistics.served++;
@@ -224,7 +224,7 @@ void Walkout_Event::perform(const double & current_time,
       expo_dist_t expo(1.0 / ptr_node->get_service_time());
 
       set_time(current_time + expo(rng));
-      ptr_queue->push(this);
+      ptr_queue->insert(this);
     }
   else // Si no había nadie en cola decremento uso y almaceno la memoria.
     {
