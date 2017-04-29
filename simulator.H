@@ -25,17 +25,17 @@
 # ifndef SIMULATOR_H
 # define SIMULATOR_H
 
-# include <list>
-# include <queue>
-
-# include <event_queue.H>
 # include <node.H>
+# include <event.H>
+
+# include <htlist.H>
+# include <tpl_dynListQueue.H>
 
 /// Representa un simulador.
 class Simulator
 {
   /// Grafo dirigido de recursos.
-  std::list<Node> graph;
+  DynList<Node> net;
 
   /// Cola de eventos.
   Event_Queue event_queue;  
@@ -62,7 +62,7 @@ class Simulator
    *  @param file_name Nombre del archivo a leer.
    *  @throe logic_error si el archivo no existe.
    */
-  void read_graph(const std::string & file_name);
+  void read_net(const std::string & file_name);
 
   /// Crea un evento de entrada para cada nodo externo.
   void init_queue();
@@ -76,6 +76,8 @@ class Simulator
 
 public:
   Simulator(const size_t &);
+
+  ~Simulator();
 
   /** Inicializa el simulador.
    *
@@ -94,7 +96,7 @@ public:
    *
    *  @param file_name Nombre del archivo que se va a construir.
    */
-  void write_dot_from_graph(const std::string & file_name);
+  void write_dot_from_net(const std::string & file_name);
 };
 
 # endif /* SIMULATOR_H */

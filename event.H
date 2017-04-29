@@ -29,41 +29,33 @@
 
 # include <node.H>
 
+# include <tpl_dynBinHeap.H>
+
 using rng_t = std::mt19937_64;
 
 using expo_dist_t = std::exponential_distribution<double>;
 
-class Event_Queue;
+class Event;
+
+struct EventCmp
+{
+  bool operator () (Event *, Event *) const;
+};
+
+using Event_Queue = DynBinHeap<Event *, EventCmp>;
 
 /** Define un evento genérico para simular. Está implementado como un nodo de
  *  lista simplemente enlazada no circular.
  */
 class Event
 {
-public:
-  /** Tipo enumerado para usar un constructor que inicializa un evento especial
-   *  con tiempo tendiendo a infinito.
-   */ 
-  enum class Ctor { Sentinel_Ctor };
-  
-  /// Definición de tipos de evento.
-  enum class Type { Internal_Arrival, External_Arrival, Walkout, Num_Types };
-  
-private:
   /// Tiempo en el cual ocurrirá el evento.
   double time;
 
   /// Puntero al nodo sobre el cual ocurrirá el evento.
   Node * ptr_node;
-
-  Event * next;
-
 public:
-  /// Construye un evento normal
   Event();
-
-  /// Construye un evento especial con tiempo tendiendo a infinito.
-  Event(Ctor);
 
   virtual ~Event();
 
@@ -75,15 +67,7 @@ public:
 
   void set_ptr_node(Node *);
 
-  void push(Event *);
-
-  Event *& front();
-
-  Event * pop();
-
   virtual void perform(const double &, Event_Queue *, rng_t &);
-
-  virtual Type get_type() const;
 };
 
 /// Representa un evento de llegada (Externa o Interna).
@@ -106,9 +90,6 @@ public:
    *  de un evento de llegada externa.
    */
   void perform(const double &, Event_Queue *, rng_t &) override;
-
-  /// Retorna el tipo External_Arrival.
-  Type get_type() const override;
 };
 
 /// Representa un evento de llegada interna.
@@ -121,9 +102,6 @@ public:
    *  de un evento de llegada interna.
    */
   virtual void perform(const double &, Event_Queue *, rng_t &) override;
-
-  /// Retorna el tipo Internal_Arrival.
-  Type get_type() const override;
 };
 
 /// Representa un evento de salida.
@@ -135,9 +113,6 @@ public:
    *  de un evento de llegada interna.
    */
   virtual void perform(const double &, Event_Queue *, rng_t &) override;
-
-  /// Retorna el tipo Walkout.
-  Type get_type() const override;
 };
 
 # endif // EVENT_H

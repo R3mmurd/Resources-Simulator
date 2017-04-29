@@ -4,7 +4,7 @@
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
+  the Free Sotware Foundation, either version 3 of the License, or
   (at your option) any later version.
 
   This program is distributed in the hope that it will be useful,
@@ -28,14 +28,13 @@
 # include <event_factory.H>
 # include <simulator.H>
 
-Event::Event()
-  : time(-1.0), ptr_node(nullptr), next(nullptr)
+bool EventCmp::operator () (Event * e1, Event * e2) const
 {
-  // Empty
+  return e1->get_time() < e2->get_time();
 }
 
-Event::Event(Event::Ctor)
-  : time(std::numeric_limits<double>::max()), ptr_node(nullptr), next(nullptr)
+Event::Event()
+  : time(-1.0), ptr_node(nullptr)
 {
   // Empty
 }
@@ -65,29 +64,6 @@ void Event::set_ptr_node(Node * _ptr_node)
   ptr_node = _ptr_node;
 }
 
-void Event::push(Event * evt)
-{
-  evt->next = next;
-  next = evt;
-}
-
-Event *& Event::front()
-{
-  return next;
-}
-
-Event * Event::pop()
-{
-  Event * ret = next;
-
-  if (ret == nullptr)
-    throw std::overflow_error("There is not next event");
-  
-  next = ret->next;
-  ret->next = nullptr;
-  return ret;
-}
-
 void Event::perform(const double & current_time, Event_Queue *, rng_t &)
 {
   Node * ptr_node = get_ptr_node();
@@ -99,11 +75,6 @@ void Event::perform(const double & current_time, Event_Queue *, rng_t &)
 
   statistics.pond_use +=
     ptr_node->get_use() * (current_time - statistics.prev_event_time);
-}
-
-Event::Type Event::get_type() const
-{
-  return Event::Type::Num_Types;
 }
 
 void Arrival_Event::perform(const double & current_time,
@@ -130,7 +101,8 @@ void Arrival_Event::perform(const double & current_time,
         statistics.empty_time += current_time - statistics.prev_event_time;
       
       // Pasa a ser atendido de inmediato, genero su salida.
-      Event * ptr_walkout_event = NEW_EVENT(Event::Type::Walkout);
+      Event * ptr_walkout_event =
+	Event_Factory::get_instance().get_walkout_event();
       
       ptr_walkout_event->set_ptr_node(ptr_node);
       
@@ -155,17 +127,11 @@ void External_Arrival_Event::perform(const double & current_time,
   /* Como fue una llegada externa se genera la próxima llegada externa sobre
      este mismo evento para reutilizar el espacio de memoria.
   */
-   expo_dist_t expo(1.0 / ptr_node->get_time_between_arrivals());
-
-   set_time(current_time + expo(rng));
-
+  expo_dist_t expo(1.0 / ptr_node->get_time_between_arrivals());
+  
+  set_time(current_time + expo(rng));
+  
   ptr_queue->insert(this);
-
-}
-
-Event::Type External_Arrival_Event::get_type() const
-{
-  return Event::Type::External_Arrival;
 }
 
 void Internal_Arrival_Event::perform(const double & current_time,
@@ -177,12 +143,7 @@ void Internal_Arrival_Event::perform(const double & current_time,
   /* Como fue una llegada interna almaceno el espacio de memoria para
      reutilizarlo luego.
   */
-  STORE_EVENT(this);
-}
-
-Event::Type Internal_Arrival_Event::get_type() const
-{
-  return Event::Type::Internal_Arrival;
+  Event_Factory::get_instance().store_internal_arrival_event(this);
 }
 
 void Walkout_Event::perform(const double & current_time,
@@ -205,7 +166,7 @@ void Walkout_Event::perform(const double & current_time,
     {
       // Creo el evento de llegada interna
       Event * ptr_internal_arrival_event =
-	NEW_EVENT(Event::Type::Internal_Arrival);
+	Event_Factory::get_instance().get_internal_arrival_event();
       ptr_internal_arrival_event->set_time(current_time);
       ptr_internal_arrival_event->set_ptr_node(ptr_tgt_node);
       
@@ -229,14 +190,9 @@ void Walkout_Event::perform(const double & current_time,
   else // Si no había nadie en cola decremento uso y almaceno la memoria.
     {
       ptr_node->dec_use();
-      STORE_EVENT(this);
+      Event_Factory::get_instance().store_walkout_event(this);
     }
 
   statistics.prev_event_time = current_time;
-}
-
-Event::Type Walkout_Event::get_type() const
-{
-  return Event::Type::Walkout;
 }
 

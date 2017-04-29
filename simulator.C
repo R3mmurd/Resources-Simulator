@@ -32,7 +32,7 @@
 # include <event_factory.H>
 
 // Lectura del archivo que describe el simulador
-void Simulator::read_graph(const std::string & file_name)
+void Simulator::read_net(const std::string & file_name)
 {
   std::ifstream file(file_name.c_str());
 
@@ -85,9 +85,9 @@ void Simulator::read_graph(const std::string & file_name)
       node.set_capacity(cap);
 
       // Inserto el nodo en el grafo (al final de la lista).
-      graph.push_back(node);
+      net.append(node);
       // Agrego al arreglo la dirección de memoria del nodo insertado.
-      node_array[i] = &graph.back();
+      node_array[i] = &net.get_last();
     }
 
   size_t num_arcs;
@@ -120,30 +120,34 @@ void Simulator::read_graph(const std::string & file_name)
   file.close();
 
   // Reparte los clientes iniciales equitativamente en los nodos
-  std::list<Node>::iterator it = graph.begin();
+  DynDlist<Node>::Iterator it(net);
 
   for (size_t c = 0; c < initial_clients; ++c)
     {
-      it->inc_queue();
-      it->statistics().init_queue++;
-      it->statistics().arrived++;
+      Node & curr = it.get_curr();
+      
+      curr.inc_queue();
+      curr.statistics().init_queue++;
+      curr.statistics().arrived++;
 
-      ++it;
+      it.next();
 
-      if (it == graph.end())
-        it = graph.begin();
+      if (not it.has_current())
+        it.reset_first();
     }
 }
 
 void Simulator::init_queue()
 {
-  for (Node & node : graph)
+  for (Node & node : net)
     {
       // Si el nodo no es de entrada lo ignoro
       if (node.get_type() != Node::External)
         continue;
 
-      Event * ptr_event = NEW_EVENT(Event::Type::External_Arrival);
+      Event * ptr_event =
+	Event_Factory::get_instance().get_external_arrival_event();
+
       ptr_event->set_ptr_node(&node);
 
       expo_dist_t expo(1.0 / node.get_time_between_arrivals());
@@ -156,7 +160,7 @@ void Simulator::init_queue()
 
 Event * Simulator::get_next_event()
 {
-  Event * ptr_event = event_queue.pop();
+  Event * ptr_event = event_queue.get();
   current_time = ptr_event->get_time();
 
   return ptr_event;
@@ -168,9 +172,15 @@ Simulator::Simulator(const size_t & _seed)
   // Empty
 }
 
+Simulator::~Simulator()
+{
+  while (not event_queue.is_empty())
+    delete event_queue.get();
+}
+
 void Simulator::init(const std::string & file_name)
 {
-  read_graph(file_name);
+  read_net(file_name);
   init_queue();
 }
 
@@ -188,9 +198,9 @@ void Simulator::exec()
       ptr_event = get_next_event();
     }
 
-  STORE_EVENT(ptr_event);
+  delete ptr_event;
 
-  for (Node & node : graph)
+  for (Node & node : net)
     {
       Node::Statistics & statistics = node.statistics();
 
@@ -211,7 +221,7 @@ std::string Simulator::generate_statistics()
   sstr << "Semilla para números aleatorios: " << seed << "\n";
   sstr << "Tiempo de simulación: " << final_time << "\n\n";
 
-  for (Node & node : graph)
+  for (Node & node : net)
     {
       sstr << "Nodo: " << node.get_label() << "\n";
       sstr << "Llegaron: " << node.statistics().arrived << "\n";
@@ -233,12 +243,12 @@ std::string Simulator::generate_statistics()
   return sstr.str();
 }
 
-void Simulator::write_dot_from_graph(const std::string & file_name)
+void Simulator::write_dot_from_net(const std::string & file_name)
 {
   std::ofstream file(file_name.c_str());
 
   // Escritura de cabecera del archivo dot.
-  file << "/* Generated automatically by write_dot_from_graph on\n"
+  file << "/* Generated automatically by write_dot_from_net on\n"
        << "   Resources Simulator System\n\n"
        << "   Author: Alejandro J. Mujica\n"
        << "   Email: aledrums at gmail dot com\n"
@@ -256,7 +266,7 @@ void Simulator::write_dot_from_graph(const std::string & file_name)
 
   size_t i = 0;
 
-  for (Node & node : graph)
+  for (Node & node : net)
     {
       // Escribe los nodos en el dot y los identifica con un número entero.
       file << "  " << i << "["
@@ -279,7 +289,7 @@ void Simulator::write_dot_from_graph(const std::string & file_name)
   file << "\n  // Arcs\n";
 
   // Recorro los nodos del grafo
-  for (Node & node : graph)
+  for (Node & node : net)
     {
       /* Obtiene del mapa el número que se le asignó a la dirección del nodo
          fuente.

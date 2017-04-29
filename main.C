@@ -51,7 +51,7 @@ int main (int argc, char * argv[])
   simulator.init(file_name);
 
   // Manda a crear el archivo resources_graph.dot con la descripción del grafo.
-  simulator.write_dot_from_graph("resources_graph.dot");
+  simulator.write_dot_from_net("resources_net.dot");
 
   // Efectúo la ejecución de la simulación.
   simulator.exec();

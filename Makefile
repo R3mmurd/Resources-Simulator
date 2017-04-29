@@ -1,12 +1,12 @@
 CXX = clang++ -std=c++14
 
-INCLUDE = -I. -I../Common
+INCLUDE = -I. -I ../Common -I ~/Aleph-w
 
-HEADERS = event.H event_queue.H event_factory.H node.H simulator.H
+HEADERS = event.H event_factory.H node.H simulator.H
 
-SOURCES = event.C event_queue.C event_factory.C node.C simulator.C
+SOURCES = event.C event_factory.C node.C simulator.C
 
-OBJECTS = event.o event_queue.o event_factory.o node.o simulator.o
+OBJECTS = event.o event_factory.o node.o simulator.o
 
 MAIN = main
 

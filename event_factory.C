@@ -27,63 +27,54 @@
 # include <event.H>
 # include <event_factory.H>
 
-Event_Factory_Data::~Event_Factory_Data()
+void Event_Factory::empty_stack(DynListStack<Event *> & stack)
 {
-  EMPTY_STORE(external_arrival_events)
-  EMPTY_STORE(internal_arrival_events)
-  EMPTY_STORE(walkout_events)
+  while (not stack.is_empty())
+    delete stack.pop();
 }
 
-Event * Event_Factory_Data::new_event(const Event::Type & type)
+Event_Factory::~Event_Factory()
 {
-  Event * ret_val = nullptr;
-
-  switch (type)
-    {
-    case Event::Type::External_Arrival:
-      if (external_arrival_events.front() == nullptr)
-        ret_val = new External_Arrival_Event;
-      else
-        ret_val = external_arrival_events.pop();
-
-      break;
-
-    case Event::Type::Internal_Arrival:
-      if (internal_arrival_events.front() == nullptr)
-        ret_val = new Internal_Arrival_Event;
-      else
-        ret_val = internal_arrival_events.pop();
-
-      break;
-
-    case Event::Type::Walkout:
-      if (walkout_events.front() == nullptr)
-        ret_val = new Walkout_Event;
-      else
-        ret_val = walkout_events.pop();
-
-      break;
-
-    default: throw std::domain_error("Error in event type");
-    }
-
-  return ret_val;
+  empty_stack(external_arrival_events);
+  empty_stack(internal_arrival_events);
+  empty_stack(walkout_events);
 }
 
-void Event_Factory_Data::store_event(Event * ptr_event)
+Event * Event_Factory::get_external_arrival_event()
 {
-  switch (ptr_event->get_type())
-    {
-    case Event::Type::External_Arrival:
-      external_arrival_events.push(ptr_event);
-      break;
-    case Event::Type::Internal_Arrival:
-      internal_arrival_events.push(ptr_event);
-      break;
-    case Event::Type::Walkout:
-      walkout_events.push(ptr_event);
-      break;
-    default: throw std::domain_error("Error in event type");
-    }
+  if (external_arrival_events.is_empty())
+    return new External_Arrival_Event;
+  
+  return external_arrival_events.pop();
 }
 
+Event * Event_Factory::get_internal_arrival_event()
+{
+  if (internal_arrival_events.is_empty())
+    return new Internal_Arrival_Event;
+  
+  return internal_arrival_events.pop();
+}
+
+Event * Event_Factory::get_walkout_event()
+{
+  if (walkout_events.is_empty())
+    return new Walkout_Event;
+  
+  return walkout_events.pop();
+}
+
+void Event_Factory::store_external_arrival_event(Event * event)
+{
+  external_arrival_events.push(event);
+}
+
+void Event_Factory::store_internal_arrival_event(Event * event)
+{
+  internal_arrival_events.push(event);
+}
+
+void Event_Factory::store_walkout_event(Event * event)
+{
+  walkout_events.push(event);
+}
