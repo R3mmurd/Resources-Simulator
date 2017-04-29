@@ -42,7 +42,7 @@ int main (int argc, char * argv[])
   // Si no se pasa una semilla como parámetro, se "aleatoriza".
   size_t seed = argc < 3
     ? std::chrono::system_clock::now().time_since_epoch().count() % rng_t::max()
-    : std::atoi(argv[2]);
+		       : std::atoi(argv[2]) % rng_t::max();
 
   // Construyo el simulador con semilla seed.
   Simulator simulator(seed);

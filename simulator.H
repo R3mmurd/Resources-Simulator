@@ -49,8 +49,6 @@ class Simulator
   /// Tiempo actual de simulación.
   double current_time;
 
-  expo_dist_t expo_dist;
-
   /// Tiempo final de simulación.
   double final_time;
 

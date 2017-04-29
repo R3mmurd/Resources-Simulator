@@ -20,7 +20,6 @@ default: obj
 obj:
 	$(CXX) $(FAST) -c $(INCLUDE) $(SOURCES)
 
-
 debug: obj_debug
 	$(CXX) $(DEBUG_MODE) $(INCLUDE) $(MAIN).C -o $(MAIN) $(OBJECTS)
 
