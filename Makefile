@@ -1,6 +1,6 @@
 CXX = clang++ -std=c++14
 
-INCLUDE = -I. -I ../Common -I ~/Aleph-w
+INCLUDE = -I. -I ../Common -I ~/Aleph-w 
 
 HEADERS = event.H event_factory.H node.H simulator.H
 

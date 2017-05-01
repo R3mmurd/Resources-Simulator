@@ -26,10 +26,11 @@
 # include <fstream>
 # include <sstream>
 # include <stdexcept>
-# include <map>
 
 # include <simulator.H>
 # include <event_factory.H>
+
+# include <tpl_dynMapTree.H>
 
 // Lectura del archivo que describe el simulador
 void Simulator::read_net(const std::string & file_name)
@@ -262,7 +263,7 @@ void Simulator::write_dot_from_net(const std::string & file_name)
        << "  // Nodes\n";
 
   // Para mapear la dirección de memoria de un nodo con un entero.
-  std::map<Node *, size_t> map_nodes;
+  DynMapAvlTree<Node *, size_t> map_nodes;
 
   size_t i = 0;
 

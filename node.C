@@ -142,7 +142,7 @@ Node * Node::get_target(const double & p)
   // Precondición de que p esté entre 0 y 1.
   assert(p >= 0.0 and p < 1.0);
 
-  if (targets.empty())
+  if (targets.is_empty())
     return nullptr;
 
   /* Como los arcos están ordenados por probabilidad, el primero que se consiga
@@ -155,7 +155,7 @@ Node * Node::get_target(const double & p)
   return nullptr;
 }
 
-std::set<Node::Target, Node::Target_Cmp> & Node::get_targets()
+DynSetAvlTree<Node::Target, Node::TargetCmp> & Node::get_targets()
 {
   return targets;
 }
@@ -169,4 +169,3 @@ Node::Statistics & Node::statistics()
 {
   return _statistics;
 }
-

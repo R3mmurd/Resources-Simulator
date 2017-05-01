@@ -26,7 +26,8 @@
 # define NODE_H
 
 # include <string>
-# include <set>
+
+# include <tpl_dynSetTree.H>
 
 /** Clase que representa un recurso de atención (taquilla).
  *
@@ -63,7 +64,7 @@ public:
    *  Este comparador es el que se le asigna al set para que mantenga los arcos
    *  ordenados por probabilidad de ser elegido.
    */
-  struct Target_Cmp
+  struct TargetCmp
   {
     bool operator () (const Target & t1, const Target & t2)
     {
@@ -117,7 +118,7 @@ private:
   unsigned long queue;
 
   /// Conjunto de nodos sucesores con sus respectivas probabilidad.
-  std::set<Target, Target_Cmp> targets;
+  DynSetAvlTree<Target, TargetCmp> targets;
 
   /// Estadísticas.
   Statistics _statistics;
@@ -172,7 +173,7 @@ public:
    */
   Node * get_target(const double &);
 
-  std::set<Target, Target_Cmp> & get_targets();
+  DynSetAvlTree<Target, TargetCmp> & get_targets();
 
   /// Retorna true si el uso es igual a la capacidad.
   bool is_full() const;
