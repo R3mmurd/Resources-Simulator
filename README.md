@@ -1,4 +1,4 @@
-Resources Simulator
+# Resources Simulator
 
 Discrete Events Simulator based on the simulator developed by Herbert Hoeger
 (http://webdelprofesor.ula.ve/ingenieria/hhoeger/curso_sim.html) in the Pascal programming language. This system was developed in the C++ programming language.
