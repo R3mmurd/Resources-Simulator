@@ -26,8 +26,7 @@
 # define EVENT_FACTORY_H
 
 # include <singleton.H>
-
-# include <tpl_dynListStack.H>
+# include <stack.H>
 
 class Event;
 
@@ -42,20 +41,20 @@ class Event;
  *  mantenerlos allí para ser reutilizados o para ser liberados en la
  *  destrucción del objeto fábrica.
  */
-class Event_Factory : public Singleton<Event_Factory>
+class Event_Factory : public Designar::Singleton<Event_Factory>
 {
-  friend class Singleton<Event_Factory>;
+  friend class Designar::Singleton<Event_Factory>;
   
   /// Almacen para eventos de llegada externa.
-  DynListStack<Event *> external_arrival_events;
+  Designar::ListStack<Event *> external_arrival_events;
 
   /// Almacen para eventos de llegada interna.
-  DynListStack<Event *> internal_arrival_events;
+  Designar::ListStack<Event *> internal_arrival_events;
 
   /// Almacen para eventos de salida.
-  DynListStack<Event *> walkout_events;
+  Designar::ListStack<Event *> walkout_events;
 
-  static void empty_stack(DynListStack<Event *> &);
+  static void empty_stack(Designar::ListStack<Event *> &);
 
 public:
   /// El destructor libera la memoria de los eventos almacenados.

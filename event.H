@@ -29,7 +29,7 @@
 
 # include <node.H>
 
-# include <tpl_dynBinHeap.H>
+# include <heap.H>
 
 using rng_t = std::mt19937_64;
 
@@ -42,7 +42,7 @@ struct EventCmp
   bool operator () (Event *, Event *) const;
 };
 
-using Event_Queue = DynBinHeap<Event *, EventCmp>;
+using Event_Queue = Designar::LHeap<Event *, EventCmp>;
 
 /** Define un evento genérico para simular. Está implementado como un nodo de
  *  lista simplemente enlazada no circular.

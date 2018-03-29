@@ -27,7 +27,7 @@
 # include <event.H>
 # include <event_factory.H>
 
-void Event_Factory::empty_stack(DynListStack<Event *> & stack)
+void Event_Factory::empty_stack(Designar::ListStack<Event *> & stack)
 {
   while (not stack.is_empty())
     delete stack.pop();

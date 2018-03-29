@@ -28,14 +28,14 @@
 # include <node.H>
 # include <event.H>
 
-# include <htlist.H>
-# include <tpl_dynListQueue.H>
+# include <list.H>
+//# include <queue.H>
 
 /// Representa un simulador.
 class Simulator
 {
   /// Grafo dirigido de recursos.
-  DynList<Node> net;
+  Designar::DLList<Node> net;
 
   /// Cola de eventos.
   Event_Queue event_queue;  

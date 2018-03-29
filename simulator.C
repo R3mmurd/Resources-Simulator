@@ -30,7 +30,7 @@
 # include <simulator.H>
 # include <event_factory.H>
 
-# include <tpl_dynMapTree.H>
+# include <map.H>
 
 // Lectura del archivo que describe el simulador
 void Simulator::read_net(const std::string & file_name)
@@ -121,11 +121,11 @@ void Simulator::read_net(const std::string & file_name)
   file.close();
 
   // Reparte los clientes iniciales equitativamente en los nodos
-  DynDlist<Node>::Iterator it(net);
+  auto it = net.begin();
 
   for (size_t c = 0; c < initial_clients; ++c)
     {
-      Node & curr = it.get_curr();
+      Node & curr = it.get_current();
       
       curr.inc_queue();
       curr.statistics().init_queue++;
@@ -134,7 +134,7 @@ void Simulator::read_net(const std::string & file_name)
       it.next();
 
       if (not it.has_current())
-        it.reset_first();
+        it.reset();
     }
 }
 
@@ -263,7 +263,7 @@ void Simulator::write_dot_from_net(const std::string & file_name)
        << "  // Nodes\n";
 
   // Para mapear la dirección de memoria de un nodo con un entero.
-  DynMapAvlTree<Node *, size_t> map_nodes;
+  Designar::TreeMap<Node *, size_t> map_nodes;
 
   size_t i = 0;
 

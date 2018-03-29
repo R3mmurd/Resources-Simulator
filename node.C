@@ -155,7 +155,7 @@ Node * Node::get_target(const double & p)
   return nullptr;
 }
 
-DynSetAvlTree<Node::Target, Node::TargetCmp> & Node::get_targets()
+Designar::TreeSet<Node::Target, Node::TargetCmp> & Node::get_targets()
 {
   return targets;
 }

@@ -27,7 +27,7 @@
 
 # include <string>
 
-# include <tpl_dynSetTree.H>
+# include <tree.H>
 
 /** Clase que representa un recurso de atención (taquilla).
  *
@@ -118,7 +118,7 @@ private:
   unsigned long queue;
 
   /// Conjunto de nodos sucesores con sus respectivas probabilidad.
-  DynSetAvlTree<Target, TargetCmp> targets;
+  Designar::TreeSet<Target, TargetCmp> targets;
 
   /// Estadísticas.
   Statistics _statistics;
@@ -173,7 +173,7 @@ public:
    */
   Node * get_target(const double &);
 
-  DynSetAvlTree<Target, TargetCmp> & get_targets();
+  Designar::TreeSet<Target, TargetCmp> & get_targets();
 
   /// Retorna true si el uso es igual a la capacidad.
   bool is_full() const;
