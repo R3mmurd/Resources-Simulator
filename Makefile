@@ -1,6 +1,6 @@
 CXX = clang++ -std=c++14
 
-INCLUDE = -I. -I ~/DeSIGNAR/include
+INCLUDE = -I. -I ~/DeSiGNAR/include
 
 HEADERS = event.H event_factory.H node.H simulator.H
 

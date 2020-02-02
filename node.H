@@ -27,7 +27,7 @@
 
 # include <string>
 
-# include <tree.H>
+# include <set.H>
 
 /** Clase que representa un recurso de atención (taquilla).
  *

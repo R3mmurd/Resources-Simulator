@@ -134,7 +134,7 @@ void Simulator::read_net(const std::string & file_name)
       it.next();
 
       if (not it.has_current())
-        it.reset();
+        it.reset_first();
     }
 }
 
@@ -224,20 +224,20 @@ std::string Simulator::generate_statistics()
 
   for (Node & node : net)
     {
-      sstr << "Nodo: " << node.get_label() << "\n";
-      sstr << "Llegaron: " << node.statistics().arrived << "\n";
-      sstr << "Servidos: " << node.statistics().served << "\n";
-      sstr << "En Servicio: " << node.get_use() << "\n";
-      sstr << "Longitud de Cola: " << node.get_queue() << "\n";
-      sstr << "Cola Máxima: " << node.statistics().max_queue << "\n";
-      sstr << "Cola Inicial: " << node.statistics().init_queue << "\n";
-      sstr << "Tiempo Promedio de Espera: "
+      sstr << "Resource: " << node.get_label() << "\n";
+      sstr << "Arrivals: " << node.statistics().arrived << "\n";
+      sstr << "Served: " << node.statistics().served << "\n";
+      sstr << "In service: " << node.get_use() << "\n";
+      sstr << "Queue length: " << node.get_queue() << "\n";
+      sstr << "Maximum queue: " << node.statistics().max_queue << "\n";
+      sstr << "Initial queue: " << node.statistics().init_queue << "\n";
+      sstr << "Average waiting time: "
            << node.statistics().total_wait_time /
               node.statistics().arrived << "\n";
-      sstr << "Longitud Promedio de Cola: "
+      sstr << "Average queue length: "
            << node.statistics().total_wait_time / final_time << "\n";
-      sstr << "Tiempo Vacío: " << node.statistics().empty_time << "\n";
-      sstr << "Ocupación Promedio: "
+      sstr << "Empty time: " << node.statistics().empty_time << "\n";
+      sstr << "Average occupation: "
            << node.statistics().pond_use / final_time << "\n\n";
     }
 
